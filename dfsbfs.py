@@ -1,51 +1,35 @@
-from collections import defaultdict, deque
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    print(start, end=" ")
 
-# Function to add an edge to the graph
-def add_edge(graph, u, v):
-    graph[u].append(v)
-    graph[v].append(u)
-
-# Depth-First Search (DFS) function
-def dfs(graph, node, visited):
-    if node not in visited:
-        print(node, end=' ')  # Print the current node
-        visited.add(node)  # Mark the node as visited
-        for neighbor in graph[node]:
+    for neighbor in graph[start]:
+        if neighbor not in visited:
             dfs(graph, neighbor, visited)
 
-# Breadth-First Search (BFS) function
+
 def bfs(graph, start):
     visited = set()
-    queue = deque([start])
+    queue = [start]
+    visited.add(start)
+
     while queue:
-        node = queue.popleft()
-        if node not in visited:
-            print(node, end=' ')  # Print the current node
-            visited.add(node)
-            queue.extend(neighbor for neighbor in graph[node] if neighbor not in visited)
+        vertex = queue.pop(0)
+        print(vertex, end=" ")
 
-# Get the number of vertices and edges from the user
-num_vertices = int(input("Enter the number of vertices: "))
-num_edges = int(input("Enter the number of edges: "))
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                queue.append(neighbor)
+                visited.add(neighbor)
 
-# Create an empty graph as an adjacency list
-graph = defaultdict(list)
 
-# Input edges
-for _ in range(num_edges):
-    u, v = input("Enter an edge (format: u v): ").split()
-    add_edge(graph, u, v)
+# Example usage:
+graph = {0: [1, 2, 3], 1: [0], 2: [0, 4, 3], 3: [0, 2], 4: [2]}
 
-# Choose a starting node for DFS and BFS
-start_node = input("Enter the starting node: ")
-
-# Initialize visited sets
-visited_dfs = set()
-visited_bfs = set()
-
-# Perform DFS and BFS
-print("Depth-First Search (DFS):")
-dfs(graph, start_node, visited_dfs)
-print("\n")
-print("Breadth-First Search (BFS):")
-bfs(graph, start_node)
+print("Graph: ")
+print(graph)
+print("DFS starting from vertex 2:")
+dfs(graph, 0)
+print("\nBFS starting from vertex 2:")
+bfs(graph, 0)
